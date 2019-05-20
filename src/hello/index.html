@@ -1,0 +1,75 @@
+<!doctype html>
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Emscripten:你好，世界！</title>
+</head>
+<body>
+<script>
+    const consoleLogInt = (function consoleLogIntFactor() {
+        let i = 0;
+        return function (param) {
+            console.log(`js_console_log_int(${i++}):${param}`);
+        }
+    }());
+    Module = {}; // var Module = typeof Module !== 'undefined' ? Module : {};
+    Module.onRuntimeInitialized = function () { // run函数会触发
+        console.log('initialized');
+        let ptr;
+        // region 修改HEAP
+        console.info('[REGION]');
+        const int_ptr = Module._get_int_ptr(); // 获取int在HEAP中位置
+        const int_value = Module.HEAP32[int_ptr >> 2]; // 计算HEAP32中的位置
+        console.log(`JS{int_value: ${int_value},int_ptr: ${int_ptr}}`);
+
+        const double_ptr = Module._get_double_ptr();
+        const double_value = Module.HEAPF64[double_ptr >> 3]; // 计算HEAP64中的位置
+        console.log(`JS{double_value: ${double_value},double_ptr: ${double_ptr}}`);
+
+        Module.HEAP32[int_ptr >> 2] = 13;
+        Module.HEAPF64[double_ptr >> 3] = 123456.789;
+        Module._print_data();
+        console.info('[ENDREGION]');
+        // endregion
+
+        // region C使用JS中分配的内存，求1至5之和
+        console.info('[REGION]');
+        const count = 5;
+        ptr = Module._malloc(4 * count);
+        const ary = Array.from(Array(count).keys()).map(val => val + 1);
+        ary.forEach((val, index) => Module.HEAP32[ptr / 4 + index] = val);
+        console.log(`[${ary}] sum by pointer: ${Module._sum_use_ptr(ptr, count)}`);
+        Module._free(ptr);
+        console.info('[ENDREGION]');
+        // endregion
+
+        // region C JS 字符串
+        console.info('[REGION]');
+        ptr = Module._get_string();
+        const str = UTF8ToString(ptr);
+        Module._free(ptr);
+        console.log(`JS{${str.length} length: ${str}}`);
+        ptr = allocateUTF8("新世界！"); // 返回UTF8Array指针
+        Module._set_string(ptr);
+        Module._free(ptr);
+        console.info('[ENDREGION]');
+        // endregion
+
+        // region ccall/cwrap
+        console.info('[REGION]');
+        console.log(`JS{ccall set_string: ${Module.ccall('set_string', 'string', ['string'], ["新世界！"])}}`); // 直接使用字符串，自动的进行参数与返回值的解析，像call
+        const c_set_string = Module.cwrap('set_string', 'string', ['string']); // 像bind，实现也是一个简单的curry
+        console.log(`JS{cwrap set_string: ${c_set_string("新世界！")}`);
+        console.info('[ENDREGION]');
+        // endregion
+        // region timer
+        setTimeout(() => {
+            Module._pause_main_loop();
+        }, 5000)
+        // endregion
+    }
+</script>
+<script src="index.js"></script>
+</body>
+</html>
