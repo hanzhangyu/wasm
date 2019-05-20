@@ -3,4 +3,5 @@ project(wasm C)
 
 set(CMAKE_C_STANDARD 99)
 
-add_executable(wasm src/hello/hello.c)
+add_executable(hello src/hello/hello.c)
+add_executable(fs src/fs/fs.c)
