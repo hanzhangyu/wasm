@@ -195,7 +195,7 @@ Module['FS_createPath']('/fs', 'data', true, true);
   }
 
  }
- loadPackage({"files": [{"start": 0, "audio": 0, "end": 36, "filename": "/fs/data/data1.txt"}, {"start": 36, "audio": 0, "end": 72, "filename": "/fs/data/data2.txt"}], "remote_package_size": 72, "package_uuid": "f8896efd-7b4a-43c1-b123-536c617cdfa8"});
+ loadPackage({"files": [{"start": 0, "audio": 0, "end": 36, "filename": "/fs/data/data1.txt"}, {"start": 36, "audio": 0, "end": 72, "filename": "/fs/data/data2.txt"}], "remote_package_size": 72, "package_uuid": "08cdff44-77c2-4291-9c90-6cf761b58e73"});
 
 })();
 

@@ -18,5 +18,7 @@ run in wsl
 
 ## Links
 - http://note.youdao.com/noteshare?id=5a463b5081e2b5b856eb723c08dfca0f&sub=F46B2556DD6A46B9A51124A7BB3F4A6D
+- https://github.com/emscripten-core/emscripten/blob/master/tests
+- https://emscripten.org/docs/api_reference
 - https://github.com/3dgen/cppwasm-book
 - https://github.com/chai2010/awesome-wasm-zh

@@ -1,0 +1,36 @@
+<!doctype html>
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Emscripten: aligned</title>
+</head>
+<body>
+<script>
+    Module = {};
+    Module.onRuntimeInitialized = function () {
+        console.log('initialized');
+        const $val = document.getElementById('val');
+        const $addr = document.getElementById('addr');
+        let cachedPtr;
+        document.getElementsByTagName('button')[0].addEventListener('click', () => {
+            let ptr = Module._getInt();
+            console.log(Module.HEAP32[ptr >> 2]);
+            ptr = Module._getDouble(); // 获取到的地址刚好是对齐的
+            console.log(Module.HEAPF64[ptr >> 3]); // 值在变，但是地址不会变
+            if (!cachedPtr) cachedPtr = ptr;
+            /***** 得到两点 *****/
+            // 1. 分配数据时会对齐其视图，并且声明与运行的数据与地址无关
+            // 2. 当修改同一个函数声明的值时，会复用之前的地址
+        });
+        setInterval(() => {
+            $addr.innerText = cachedPtr + '';
+            $val.innerText = Module.HEAPF64[cachedPtr >> 3] + '';
+        }, 1000);
+    }
+</script>
+<script src="index.js"></script>
+<button>获取数据</button>
+<p>点击按钮之后，在地址 <span id="addr"></span>中的值为：<span id="val"></span></p>
+</body>
+</html>

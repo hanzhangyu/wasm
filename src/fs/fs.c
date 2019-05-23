@@ -10,7 +10,7 @@ int main() {
     readFile("/fs/data/data1.txt");
     writeFile("/fs/data/data2.txt", "静夜思\n"); // 替换文件内容，刷新即会失效
     readFile("/fs/data/data2.txt");
-    printf("\nC{exit main}\n");
+    printf("C{exit main}\n");
     return 0;
 }
 

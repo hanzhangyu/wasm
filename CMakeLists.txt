@@ -5,3 +5,4 @@ set(CMAKE_C_STANDARD 99)
 
 add_executable(hello src/hello/hello.c)
 add_executable(fs src/fs/fs.c)
+add_executable(aligned src/aligned/aligned.c)
