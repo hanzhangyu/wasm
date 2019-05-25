@@ -1,4 +1,5 @@
 function swap(ary, i, j) {
+    if (i === j) return;
     let temp = ary[i];
     ary[i] = ary[j];
     ary[j] = temp;
@@ -59,7 +60,46 @@ function jsQuickSort(ary, start = 0, end = ary.length - 1) {
     jsQuickSort(ary, low + 1, end);
 }
 
-// var a = [7, 2, 6, 8, 9, 1, 4, 3, 5];
+function jsSelectionSort(ary) {
+    const len = ary.length;
+    for (let i = 0; i < len - 1; i++) {
+        let minIndex = i;
+        for (let j = i + 1; j < len; j++) {
+            if (ary[minIndex] > ary[j]) {
+                minIndex = j;
+            }
+        }
+        swap(ary, i, minIndex);
+    }
+}
+
+function heapFallAdjust(ary, parent, len) {
+    let childIndex = parent * 2 + 1; // (parent + 1) * 2 - 1，设左节点为需要比较的节点
+    const cur = ary[parent];
+    while (childIndex < len) {
+        if (childIndex + 1 < len && ary[childIndex + 1] > ary[childIndex]) { // 如果右节点存在且更大，将右节点设置为带比较的节点
+            childIndex++;
+        }
+        if (cur >= ary[childIndex]) break; // 大于最大值
+        ary[parent] = ary[childIndex]; // 标记下移
+        parent = childIndex;
+        childIndex = childIndex * 2 + 1;
+    }
+    ary[parent] = cur;
+}
+
+function jsHeapSort(ary) {
+    const len = ary.length;
+    for (let i = ((len - 1) / 2) | 0; i >= 0; i--) {
+        heapFallAdjust(ary, i, len)
+    }
+    for (let i = len - 1; i > 0; i--) {
+        swap(ary, 0, i);
+        heapFallAdjust(ary, 0, i);
+    }
+}
+
+var a = [7, 2, 6, 8, 9, 1, 4, 3, 5];
 // var a = Array.from(Array(100).keys()).reverse();
-// jsShellSort(a);
-// console.log(a);
+jsHeapSort(a);
+console.log(a);

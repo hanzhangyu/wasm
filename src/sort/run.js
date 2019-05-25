@@ -42,6 +42,18 @@ Module.onRuntimeInitialized = function () {
         }],
         ['QuickSort{C}', function () {
             runCSort(Module._quickSort);
+        }],
+        ['SelectionSort{JS}', function () {
+            jsSelectionSort(INIT_ARRAY.slice());
+        }],
+        ['SelectionSort{C}', function () {
+            runCSort(Module._selectionSort);
+        }],
+        ['HeapSort{JS}', function () {
+            jsHeapSort(INIT_ARRAY.slice());
+        }],
+        ['HeapSort{C}', function () {
+            runCSort(Module._heapSort);
         }]
     ];
     const result = [];

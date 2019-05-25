@@ -74,13 +74,51 @@ void quickSortInner(int *ary, int start, int end) {
     quickSortInner(ary, start, low - 1);
     quickSortInner(ary, low + 1, end);
 }
+
 EM_PORT_API(void) quickSort(int *ary, int size) {
     quickSortInner(ary, 0, size - 1);
 }
 
+EM_PORT_API(void) selectionSort(int *ary, int size) {
+    for (int i = 0; i < size - 1; i++) {
+        int minIndex = i;
+        for (int j = i + 1; j < size; j++) {
+            if (ary[minIndex] > ary[j]) {
+                minIndex = j;
+            }
+        }
+        swap(&ary[minIndex], &ary[i]);
+    }
+}
+
+void heapFallSortInner(int *ary, int parent, int size) {
+    int childIndex = parent * 2 + 1;
+    int cur = ary[parent];
+    while (childIndex < size) {
+        if (childIndex + 1 < size && ary[childIndex + 1] > ary[childIndex]) {
+            childIndex++;
+        }
+        if (cur >= ary[childIndex]) break;
+        ary[parent] = ary[childIndex];
+        parent = childIndex;
+        childIndex = childIndex * 2 + 1;
+    }
+    ary[parent] = cur;
+}
+
+EM_PORT_API(void) heapSort(int *ary, int size) {
+    for (int i = (size - 1) / 2; i >= 0; i--) {
+        heapFallSortInner(ary, i, size);
+    }
+    for (int i = size - 1; i > 0; i--) {
+        swap(ary, &ary[i]);
+        heapFallSortInner(ary, 0, i);
+    }
+}
+
 int main(void) {
-//    int i[] = {1, 2, 6, 8, 9, 7, 4, 3, 5};
-//    quickSort(i, 9);
-//    printAry(i, 9);
+    int i[] = {1, 2, 6, 8, 9, 7, 4, 3, 5};
+    heapSort(i, 9);
+    printAry(i, 9);
     return 0;
 }

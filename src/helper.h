@@ -6,6 +6,7 @@ void printAry(int *ary, int size) {
 }
 
 void swap(int *a, int *b) {
+    if (a == b) return;
     int temp = *a;
     *a = *b;
     *b = temp;
