@@ -1,17 +1,5 @@
 Module.onRuntimeInitialized = function () {
     // region initialize
-    // random order ary
-    function shuffle(ary) {
-        let m = ary.length, t, i;
-        while (m) {
-            i = Math.floor(Math.random() * m--);
-            t = ary[m];
-            ary[m] = ary[i];
-            ary[i] = t;
-        }
-        return ary;
-    }
-
     const $result = document.getElementById('result');
     const INIT_ARRAY = shuffle(Array.from(Array(100).keys()));
     // malloc -> run -> free

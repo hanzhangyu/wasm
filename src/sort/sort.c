@@ -1,12 +1,12 @@
 #include <stdio.h>
 #include "../global.h"
-#include "../helper.h"
+#include "../helper.c"
 
 EM_PORT_API(void) insertionSort(int *ary, int size) {
-    for (int i = 0; i < size; i++) {
+    for (int i = 1; i < size; i++) {
         int cur = ary[i];
         int j = i - 1;
-        int changedIndex = 0;
+        int changedIndex = i;
         for (; j >= 0; j--) {
             if (cur < ary[j]) {
                 ary[j + 1] = ary[j];
@@ -15,9 +15,7 @@ EM_PORT_API(void) insertionSort(int *ary, int size) {
                 break;
             }
         }
-        if (changedIndex > 0) {
-            ary[changedIndex] = cur;
-        }
+        ary[changedIndex] = cur;
     }
 }
 
@@ -116,9 +114,24 @@ EM_PORT_API(void) heapSort(int *ary, int size) {
     }
 }
 
-int main(void) {
-    int i[] = {1, 2, 6, 8, 9, 7, 4, 3, 5};
-    heapSort(i, 9);
-    printAry(i, 9);
-    return 0;
+EM_PORT_API(void) mergeSort(int *ary, int size) {
+    for (int i = 2; i / 2 <= size; i *= 2) {
+        int half = i / 2;
+        for (int j = 0; j < size; j += i) {
+            int tempAry[i];
+            int index = 0;
+            int leftIndex = j;
+            int leftIndexEnd = j + half - 1;
+            int rightIndex = leftIndexEnd + 1;
+            int rightIndexEnd = leftIndex + i - 1;
+            while (leftIndex <= leftIndexEnd && rightIndex <= rightIndexEnd && rightIndex < size) {
+                tempAry[index++] = ary[leftIndex] <= ary[rightIndex] ? ary[leftIndex++] : ary[rightIndex++];
+            }
+            while (leftIndex <= leftIndexEnd)
+                tempAry[index++] = ary[leftIndex++];
+            while (rightIndex <= rightIndexEnd)
+                tempAry[index++] = ary[rightIndex++];
+            copyRange(tempAry, ary, 0, j, i, i, size);
+        }
+    }
 }

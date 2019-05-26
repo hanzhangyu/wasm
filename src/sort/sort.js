@@ -1,9 +1,4 @@
-function swap(ary, i, j) {
-    if (i === j) return;
-    let temp = ary[i];
-    ary[i] = ary[j];
-    ary[j] = temp;
-}
+const swap = typeof window === 'undefined' ? require('../helper').swap : swap;
 
 function jsInsertionSort(ary) {
     const len = ary.length;
@@ -99,7 +94,55 @@ function jsHeapSort(ary) {
     }
 }
 
-var a = [7, 2, 6, 8, 9, 1, 4, 3, 5];
-// var a = Array.from(Array(100).keys()).reverse();
-jsHeapSort(a);
-console.log(a);
+function jsMergeSort(ary) {
+    const len = ary.length;
+    for (let i = 2; i / 2 <= len ; i *= 2) { // 进行二叉树的自底向上遍历，i取值对子序列元素个数2, 4, 8
+        const half = i / 2;
+        for (let j = 0; j < len; j += i) {
+            // 直接不停的取两部分的最小值进行空间换时间O(m + n)
+            const left = ary.slice(j, j + half);
+            const right = ary.slice(j + half, Math.min(j + i, len));
+            let x = j;
+            while (left.length && right.length) {
+                ary[x++] = left[0] <= right[0] ? left.shift(): right.shift(); // 注意保持稳定性
+            }
+            while (left.length) {
+                ary[x++] = left.shift();
+            }
+            while (right.length) {
+                ary[x++] = right.shift();
+            }
+        }
+    }
+}
+
+function jsMergeInsertionSort(ary) {
+    const len = ary.length;
+    for (let i = 2; i / 2 <= len ; i *= 2) {
+        const half = i / 2;
+        for (let j = 0; j < len; j += i) {
+            // 前半部分已有序，后半部分使用插排，时间换空间O(m * n)。
+            for (let x = j + half; x < j + i && x < len; x++) {
+                let cur = ary[x];
+                let curIndex = x;
+                while (cur < ary[curIndex - 1] && curIndex > j) {
+                    ary[curIndex] = ary[curIndex - 1];
+                    curIndex--;
+                }
+                ary[curIndex] = cur;
+            }
+        }
+    }
+}
+
+if (typeof window === 'undefined') {
+    module.exports = {
+        jsInsertionSort,
+        jsShellSort,
+        jsQuickSort,
+        jsSelectionSort,
+        jsHeapSort,
+        jsMergeSort,
+        jsMergeInsertionSort,
+    };
+}
