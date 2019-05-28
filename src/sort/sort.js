@@ -1,4 +1,4 @@
-const swap = typeof window === 'undefined' ? require('../helper').swap : swap;
+var swap = typeof window === 'undefined' ? require('../helper').swap : swap;
 
 function jsInsertionSort(ary) {
     const len = ary.length;
@@ -186,7 +186,7 @@ function jsBucketSort(ary) {
     }
 }
 
-function radixSort(ary) {
+function jsRadixSort(ary) {
     const len = ary.length;
     const radix = 10;
     const buckets = [];
@@ -225,6 +225,6 @@ if (typeof window === 'undefined') {
         jsMergeInsertionSort,
         jsBucketShitSort,
         jsBucketSort,
-        radixSort,
+        jsRadixSort,
     };
 }

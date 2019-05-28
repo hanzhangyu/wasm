@@ -15,7 +15,7 @@ const CORRECT_TEST = [
     'jsMergeInsertionSort',
     'jsBucketShitSort',
     'jsBucketSort',
-    'radixSort',
+    'jsRadixSort',
 ];
 
 const TEMPLATE_ARRAY = shuffle(Array.from(Array(SIZE).keys()));

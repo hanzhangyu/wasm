@@ -43,6 +43,24 @@ Module.onRuntimeInitialized = function () {
         }],
         ['HeapSort{C}', function () {
             runCSort(Module._heapSort);
+        }],
+        ['MergeSort{JS}', function () {
+            jsMergeSort(INIT_ARRAY.slice());
+        }],
+        ['MergeSort{C}', function () {
+            runCSort(Module._mergeSort);
+        }],
+        ['BucketSort{JS}', function () {
+            jsBucketSort(INIT_ARRAY.slice());
+        }],
+        ['BucketSort{C}', function () {
+            runCSort(Module._bucketSort);
+        }],
+        ['RadixSort{JS}', function () {
+            jsRadixSort(INIT_ARRAY.slice());
+        }],
+        ['RadixSort{C}', function () {
+            runCSort(Module._radixSort);
         }]
     ];
     const result = [];
