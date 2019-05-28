@@ -3,7 +3,7 @@
 
 int main(void) {
     srand(time(NULL));
-    int SIZE = 30000;
+    int SIZE = 90000;
     int ary[SIZE];
     int templateAry[SIZE];
     getRandomArray(templateAry, SIZE);
@@ -43,5 +43,15 @@ int main(void) {
     startTime = timeInMilliseconds();
     mergeSort(ary, SIZE);
     assertAsc("correct for mergeSort", startTime, ary, SIZE);
+
+    copy(templateAry, ary, SIZE);
+    startTime = timeInMilliseconds();
+    bucketSort(ary, SIZE);
+    assertAsc("correct for bucketSort", startTime, ary, SIZE);
+
+    copy(templateAry, ary, SIZE);
+    startTime = timeInMilliseconds();
+    radixSort(ary, SIZE);
+    assertAsc("correct for radixSort", startTime, ary, SIZE);
     return 0;
 }

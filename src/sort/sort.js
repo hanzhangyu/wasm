@@ -96,7 +96,7 @@ function jsHeapSort(ary) {
 
 function jsMergeSort(ary) {
     const len = ary.length;
-    for (let i = 2; i / 2 <= len ; i *= 2) { // 进行二叉树的自底向上遍历，i取值对子序列元素个数2, 4, 8
+    for (let i = 2; i / 2 <= len; i *= 2) { // 进行二叉树的自底向上遍历，i取值对子序列元素个数2, 4, 8
         const half = i / 2;
         for (let j = 0; j < len; j += i) {
             // 直接不停的取两部分的最小值进行空间换时间O(m + n)
@@ -104,7 +104,7 @@ function jsMergeSort(ary) {
             const right = ary.slice(j + half, Math.min(j + i, len));
             let x = j;
             while (left.length && right.length) {
-                ary[x++] = left[0] <= right[0] ? left.shift(): right.shift(); // 注意保持稳定性
+                ary[x++] = left[0] <= right[0] ? left.shift() : right.shift(); // 注意保持稳定性
             }
             while (left.length) {
                 ary[x++] = left.shift();
@@ -118,7 +118,7 @@ function jsMergeSort(ary) {
 
 function jsMergeInsertionSort(ary) {
     const len = ary.length;
-    for (let i = 2; i / 2 <= len ; i *= 2) {
+    for (let i = 2; i / 2 <= len; i *= 2) {
         const half = i / 2;
         for (let j = 0; j < len; j += i) {
             // 前半部分已有序，后半部分使用插排，时间换空间O(m * n)。
@@ -135,6 +135,85 @@ function jsMergeInsertionSort(ary) {
     }
 }
 
+const highWatermark = 1000;
+
+// 感觉除非想分布式不然用处不大
+function jsBucketShitSort(ary) {
+    const len = ary.length;
+    const bucketNum = ary < highWatermark ? len : highWatermark;
+    const buckets = [];
+    let min, max = min = ary[0];
+    for (let i = 0; i < len; i++) {
+        ary[i] < min && (min = ary[i]);
+        ary[i] > max && (max = ary[i]);
+    }
+    let offset = (max - min + 1) / bucketNum;
+    for (let i = 0; i < len; i++) {
+        const index = ((ary[i] - min) / offset) | 0;
+        if (buckets[index]) {
+            buckets[index].push(ary[i]);
+        } else {
+            buckets[index] = [ary[i]];
+        }
+    }
+    for (let i = 0; i < bucketNum; i++) {
+        jsQuickSort(buckets[i]);
+        ary.concat(buckets[i]);
+    }
+    ary.splice(0, len);
+}
+
+function jsBucketSort(ary) {
+    const len = ary.length;
+    let min, max = min = ary[0];
+    let i = 0;
+    for (; i < len; i++) {
+        ary[i] < min && (min = ary[i]);
+        ary[i] > max && (max = ary[i]);
+    }
+    const bucketLen = max - min + 1;
+    const buckets = Array(bucketLen).fill(0);
+    for (i = 0; i < len; i++) {
+        buckets[i - min]++;
+    }
+    i = 0;
+    while (buckets.length) {
+        const num = buckets.shift();
+        for (let j = 0; j < num; j++) {
+            ary[i + j] = i + min;
+        }
+        i += num;
+    }
+}
+
+function radixSort(ary) {
+    const len = ary.length;
+    const radix = 10;
+    const buckets = [];
+    let max = ary[0];
+    let i = 0;
+    for (; i < len; i++) {
+        ary[i] > max && (max = ary[i]);
+    }
+    const maxRadix = 10 ** String(max).length;
+    let prevRadix = 1;
+    while (prevRadix < maxRadix) {
+        const curRadix = prevRadix * radix;
+        for (i = 0; i < ary.length; i++) {
+            const curIndex = (ary[i] % curRadix / prevRadix) | 0;
+            if (!buckets[curIndex]) buckets[curIndex] = [];
+            buckets[curIndex].push(ary[i]);
+        }
+        i = 0;
+        while (buckets.length) {
+            const bucket = buckets.shift();
+            ary.splice(i, bucket.length, ...bucket);
+            i += bucket.length;
+        }
+        prevRadix = curRadix;
+    }
+}
+
 if (typeof window === 'undefined') {
     module.exports = {
         jsInsertionSort,
@@ -144,5 +223,8 @@ if (typeof window === 'undefined') {
         jsHeapSort,
         jsMergeSort,
         jsMergeInsertionSort,
+        jsBucketShitSort,
+        jsBucketSort,
+        radixSort,
     };
 }

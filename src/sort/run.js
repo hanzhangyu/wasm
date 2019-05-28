@@ -1,7 +1,8 @@
 Module.onRuntimeInitialized = function () {
+    const SIZE = 100;
     // region initialize
     const $result = document.getElementById('result');
-    const INIT_ARRAY = shuffle(Array.from(Array(100).keys()));
+    const INIT_ARRAY = shuffle(Array.from(Array(SIZE).keys()));
     // malloc -> run -> free
     const runCSort = (fn) => {
         const ptr = Module._malloc(4 * INIT_ARRAY.length);
